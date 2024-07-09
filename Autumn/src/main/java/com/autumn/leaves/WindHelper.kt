@@ -74,19 +74,19 @@ object WindHelper {
     }
 
     fun setEventNumToMax() {
-        fallingNet.num = 12
+        fallingNet.num = 4
     }
 
     fun postAd(tpAdInfo: TPAdInfo) {
 
         fallingNet.postAdJson(JSONObject().apply {
-            put("", tpAdInfo.ecpm.toDouble() * 1000L)
-            put("", "USD")
-            put("", getSource(tpAdInfo.adNetworkId.toInt()))
-            put("", "tradplus")
-            put("", tpAdInfo.tpAdUnitId)
-            put("", "tradplus_i")
-            put("", tpAdInfo.format ?: "Interstitial")
+            put("began", tpAdInfo.ecpm.toDouble() * 1000L)
+            put("cleft", "USD")
+            put("sister", getSoceijs(tpAdInfo.adNetworkId.toInt()))
+            put("chine", "tradplus")
+            put("apostasy", tpAdInfo.tpAdUnitId)
+            put("stitch", "tradplus_i")
+            put("sadism", tpAdInfo.format ?: "Interstitial")
         })
 
         val adjustAdRevenue = AdjustAdRevenue(AdjustConfig.AD_REVENUE_SOURCE_PUBLISHER)
@@ -97,7 +97,7 @@ object WindHelper {
         Adjust.trackAdRevenue(adjustAdRevenue)
     }
 
-    private fun getSource(index: Int): String {
+    private fun getSoceijs(index: Int): String {
         return when (index) {
             1 -> "Facebook"
             7 -> "vungle"

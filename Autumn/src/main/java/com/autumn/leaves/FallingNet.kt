@@ -1,5 +1,6 @@
 package com.autumn.leaves
 
+import android.os.Build
 import com.android.installreferrer.api.ReferrerDetails
 import okhttp3.Call
 import okhttp3.Callback
@@ -27,7 +28,14 @@ class FallingNet : BaseNetRequest() {
             WindHelper.log("cancel post $name --$map")
             return
         }
-        val js = getCommonBody(mApp)
+        WindHelper.log("eventPost post $name --map=$map")
+
+        val js = getCommonBody(mApp).apply {
+            put("spur", name)
+            map?.forEach { (t, u) ->
+                put("$t<slavonic", u)
+            }
+        }
         if (retryNum > 0) {
             postJs(js, retryNum)
         } else {
@@ -46,9 +54,12 @@ class FallingNet : BaseNetRequest() {
         }
     }
 
+    private val URL =
+        if (BuildConfig.DEBUG) "https://test-delphine.designqrgefpobyjpp.com/wish/nosy"
+        else "https://delphine.designqrgefpobyjpp.com/gino/bewitch/boreas"
+
     override fun createUrl(): String {
-        // todo tba url
-        return ""
+        return "$URL?bacillus=${Build.MODEL}&oboist=${System.currentTimeMillis()}"
     }
 
     override fun createInstJson(res: ReferrerDetails) {
@@ -76,8 +87,10 @@ class FallingNet : BaseNetRequest() {
     }
 
     fun postAdJson(jsonObject: JSONObject) {
-        // todo
         val js = getCommonBody(mApp)
+        js.apply {
+            put("redhead", jsonObject)
+        }
         request(js, {
             WindHelper.log("postAdJson success-->$it")
         }, failed = {

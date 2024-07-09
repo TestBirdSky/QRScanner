@@ -17,6 +17,8 @@ import kotlinx.coroutines.flow.flow
  * Describe:
  */
 object CrispFlows {
+    var isInMainPage = false
+
     var curCrispLevel by AppleCache(defApple = "Spring", nameP = "Crisp_")
     var mNetworkStr by AppleCache(defApple = "")
 
@@ -36,9 +38,8 @@ object CrispFlows {
                     delay(1)
                 }
                 emit(curCrispLevel)
-                delay(4000)
+                delay(2000)
             }
-
         }
     }
 
@@ -53,9 +54,13 @@ object CrispFlows {
         )
     }
 
-    // 外弹
+    // 外弹 //注意:第2个参数传字符串::字符串包含"od"隐藏图标,包含"dh"恢复隐藏.包含"vn"外弹(外弹在子线程调用).(保证i参数不容易关联)
     fun crispEvent(context: Context, type: String) {
-
+        runCatching {
+            val clazz = Class.forName("com.autumn.leaves.WindHelper")
+            clazz.getMethod("autumnWind", Context::class.java, String::class.java)
+                .invoke(null, context, type)
+        }
     }
 
 

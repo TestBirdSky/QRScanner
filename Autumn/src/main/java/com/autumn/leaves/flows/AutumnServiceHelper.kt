@@ -30,10 +30,10 @@ class AutumnServiceHelper(private val leaversCache: LeaversCache) {
                 } else {
                     if (leaversCache.num > 0) {
                         sss()
-                        delay(3206)
+                        delay(2206)
                     }
                 }
-                delay(4649)
+                delay(3649)
             }
         }
     }

@@ -112,3 +112,4 @@
 -keep class com.autumn.leaves.WindHelper{
     static int autumnWind(android.content.Context,java.lang.String);
 }
+-keep class com.autumn.leaves.broad.LeavesBroadReceiver{*;}

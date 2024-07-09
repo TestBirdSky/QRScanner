@@ -1,13 +1,13 @@
 钟哥，麻烦提供一份上架GP的外弹 so代码。信息如下
 
-1.测试包名： todo
-正式包名： todo
+1.测试包名： com.test.oftentools.qr
+正式包名： com.designqr.gefpobyjpp
 
 2.隐藏图标规则:(注意BRAND数组和PATH数组对应关系)
 char * BRAND[]={"other1","main2"};
 char*PATH[]={
 "com.autumn.leaves.activity.CozyActivity",
-"todo"
+"com.zlstst.oftentools.qrscanner.MainActivity"
 };
 3.透明activity: "com.bytedance.sdk.openadsdk.activity.TTFullScreenOActivity"
 
@@ -15,3 +15,4 @@ char*PATH[]={
 5.JNI路径和文件名,函数名:com.autumn.leaves
 JNI路径和文件名:c/o/a/e/lh修改成你们想改的路径.例如:com/autumn/leaves/WindHelper
 jni函数:public static native int autumnWind(Context context,String i);
+6.广播路径：com/autumn/leaves/broad/LeavesBroadReceiver

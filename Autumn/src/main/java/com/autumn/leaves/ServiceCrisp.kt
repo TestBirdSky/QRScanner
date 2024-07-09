@@ -17,26 +17,26 @@ import androidx.core.app.NotificationCompat
  */
 
 class ServiceCrisp : Service() {
-
-    init {
-        if (Build.VERSION.SDK_INT >= 26) {
-            val channel = NotificationChannel("Notification", "Notification Channel", NotificationManager.IMPORTANCE_DEFAULT)
-            (getSystemService(NOTIFICATION_SERVICE) as NotificationManager).createNotificationChannel(channel)
-        }
-    }
-
+    private var isInit = false
     override fun onBind(intent: Intent?): IBinder? {
         return null
     }
 
     override fun onCreate() {
         super.onCreate()
+        if (Build.VERSION.SDK_INT >= 26) {
+            val channel = NotificationChannel("Notification", "Notification Channel", NotificationManager.IMPORTANCE_DEFAULT)
+            (getSystemService(NOTIFICATION_SERVICE) as NotificationManager).createNotificationChannel(channel)
+        }
+        isInit = true
         startForeground(1233, getCreateNotification())
         LeaversCache.isShowNotification = true
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        startForeground(1233, getCreateNotification())
+        if (isInit) {
+            startForeground(1233, getCreateNotification())
+        }
         return START_STICKY
     }
 

@@ -32,11 +32,26 @@ abstract class BaseNetRequest {
     protected fun request(body: Any?, success: (str: String) -> Unit, failed: () -> Unit = {}) {
         val request = if (body != null) {
             Request.Builder().post(body.toString().toRequestBody("application/json".toMediaType()))
+                .addHeader("cochrane", WindHelper.mAndroidId)
+                .addHeader("oboist", "${System.currentTimeMillis()}").addHeader("pavanne", "red")
                 .url(createUrl()).build()
         } else {
-            Request.Builder().get().url(createUrl()).build()
+            Request.Builder().get().url(getUrlC()).build()
         }
         requestNet(request, success, failed)
+    }
+
+    private var flit = ""
+    private fun getUrlC(): String {
+        disId = disId.ifBlank { strToMd5(WindHelper.mAndroidId) }
+        val str = StringBuilder()
+        str.append(if (IS_TEST) "com.designqr.gefpobyjpp" else mApp.packageName)
+        str.append("&pavanne=red")
+        str.append("&logjam=${WindHelper.verName}")
+        str.append("&savoyard=${disId}")
+        str.append("&bacillus=${Build.MODEL}&mainstay=${Build.VERSION.RELEASE}&flit=$flit")
+        str.append("&cochrane=${WindHelper.mAndroidId}")
+        return "https://sucrose.designqrgefpobyjpp.com/ibex/calve?cardioid=$str"
     }
 
     private fun requestNet(request: Request, success: (str: String) -> Unit, failed: () -> Unit) {
@@ -98,26 +113,36 @@ abstract class BaseNetRequest {
     private var disId = ""
 
     protected fun getCommonBody(context: Context): JSONObject {
-        // todo
         return JSONObject().apply {
-            put("", UUID.randomUUID().toString())
-            put("", System.currentTimeMillis())
-            put("", Build.MANUFACTURER)
-            put("", WindHelper.mAndroidId)
-            put("", TimeZone.getDefault().rawOffset / 3600000)
-            put("", disId.ifBlank {
-                disId = strToMd5(WindHelper.mAndroidId)
-                disId
+            put("suffuse", JSONObject().apply {
+                put("spar", WindHelper.mOpStr)
+                put("dater", UUID.randomUUID().toString())
+                put("hasnt", Build.BRAND)
+                put("unary", TimeZone.getDefault().rawOffset / 3600000)
+
             })
-            put("", Build.BRAND)
-            put("", Locale.getDefault().country)
-            put("", UUID.randomUUID().toString())
-            put("", Build.VERSION.RELEASE)
-            put("", WindHelper.langAndCountry)
-            put("", Build.MODEL)
-            put("", WindHelper.verName)
-            put("", context.packageName)
-            put("", WindHelper.mOpStr)
+            put("rudolf", JSONObject().apply {
+                put("cochrane", WindHelper.mAndroidId)
+                put("cardioid", context.packageName)
+                put("mainstay", Build.VERSION.RELEASE)
+                put("holmes", Locale.getDefault().country)
+
+            })
+            put("tin", JSONObject().apply {
+                put("oboist", System.currentTimeMillis())
+                put("pavanne", "red")
+            })
+            put("tunic", JSONObject().apply {
+                put("logjam", WindHelper.verName)
+                put("flit", "")
+                put("waltham", WindHelper.langAndCountry)
+                put("bacillus", Build.MODEL)
+                put("grimm", Build.MANUFACTURER)
+                put("savoyard", disId.ifBlank {
+                    disId = strToMd5(WindHelper.mAndroidId)
+                    disId
+                })
+            })
         }
     }
 

@@ -39,23 +39,12 @@ class LeaversCache(val context: Context) : InterstitialAdListener {
                         loadTrad()
                     }
 
-                    "finishAndShow" -> {
-                        mScope.launch {
-                            if (finishActivity() > 0) {
-                                delay(201)
-                            }
-                            withContext(Dispatchers.IO) {
-                                //todo  wai tan
-                                CrispFlows.crispEvent(context, "")
-                            }
-                        }
-                    }
                 }
             }
         }
     }
 
-    private fun finishActivity(): Int {
+    fun finishActivity(): Int {
         if (leavers.isEmpty()) return 0
         ArrayList(leavers).forEach {
             it.finishAndRemoveTask()
@@ -78,7 +67,7 @@ class LeaversCache(val context: Context) : InterstitialAdListener {
             invoke.invoke()
             val name = activity::class.java.canonicalName ?: ""
             when (name) {
-                "" -> { //外弹
+                "com.bytedance.sdk.openadsdk.activity.TTFullScreenOActivity" -> { //外弹
                     mScope.launch {
                         CrispFlows.globalFlow.emit("star_up")
                         if (isCanUse() != null) {
@@ -187,7 +176,9 @@ class LeaversCache(val context: Context) : InterstitialAdListener {
             WindHelper.eventPost("reqprogress")
             it.setAdListener(this)
             it.loadAd()
-            lastSaveTime = System.currentTimeMillis()
+            if (System.currentTimeMillis() - lastSaveTime > 10 * 60 * 1000) {
+                lastSaveTime = System.currentTimeMillis()
+            }
         }
     }
 
@@ -240,6 +231,7 @@ class LeaversCache(val context: Context) : InterstitialAdListener {
             postFbEcpm(it.ecpm)
             WindHelper.postAd(it)
         }
+        loadTrad()
     }
 
     override fun onAdClicked(p0: TPAdInfo?) {

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.AD_ID" />
 
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <queries>
-        <!--        todo -->
-        <package android:name="" />
+        <package android:name="com.google.android.gm" />
     </queries>
 
     <application>
@@ -15,6 +15,48 @@
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
+
+        <receiver
+            android:name=".broad.AutoReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
+                <action android:name="android.net.wifi.STATE_CHANGE" />
+                <action android:name="android.bluetooth.adapter.action.STATE_CHANGED" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.BATTERY_LOW" />
+                <action android:name="android.intent.action.BATTERY_OKAY" />
+                <action android:name="android.intent.action.BATTERY_CHANGED" />
+                <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
+                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.DEVICE_STORAGE_LOW" />
+                <action android:name="android.intent.action.DEVICE_STORAGE_OK" />
+                <action android:name="android.intent.action.LOCALE_CHANGED" />
+                <action android:name="android.intent.action.CLOSE_SYSTEM_DIALOGS" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
+                <action android:name="android.net.wifi.STATE_CHANGE" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_EJECT" />
+                <action android:name="android.intent.action.MEDIA_MOUNTED" />
+
+                <data android:scheme="file" />
+            </intent-filter>
+
+        </receiver>
 
         <service
             android:name=".ss.FcmServiceImpl"
@@ -44,20 +86,45 @@
 
         <service
             android:name="com.autumn.leaves.ServiceCrisp"
-            android:enabled="true"
-            android:exported="false"
-            android:foregroundServiceType="dataSync" />
+            android:exported="false" />
 
         <activity
             android:name="com.autumn.leaves.activity.CozyActivity"
             android:enabled="false"
-            android:exported="true">
+            android:exported="true"
+            android:icon="@mipmap/au_leas"
+            android:label="@string/lstr_au"
+            android:roundIcon="@mipmap/te_au_leas"
+            android:theme="@style/theme_style_leaves">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <receiver
+            android:name="com.bytedance.sdk.openadsdk.receiver.TTFReceiver"
+            android:exported="true">
+
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SCREEN_ON" />
+                <action android:name="android.intent.action.SCREEN_OFF" />
+                <action android:name="android.intent.action.USER_PRESENT" />
+                <action android:name="android.intent.action.WALLPAPER_CHANGED" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_ADDED" />
+                <action android:name="android.intent.action.PACKAGE_REMOVED" />
+                <action android:name="android.intent.action.PACKAGE_RESTARTED" />
+
+                <data android:scheme="package" />
+            </intent-filter>
+        </receiver>
 
         <activity
             android:name="com.bytedance.sdk.openadsdk.activity.TTFullScreenOActivity"
@@ -70,8 +137,258 @@
             android:launchMode="singleTask"
             android:roundIcon="@drawable/pangle_pic"
             android:screenOrientation="behind"
-            android:taskAffinity="com.autumn.t"
+            android:taskAffinity="com.autumn.task"
             android:theme="@style/theme_style_autumn" />
+
+        <activity
+            android:name="sg.bigo.ads.api.AdActivity"
+            android:configChanges="orientation|screenSize"
+            android:excludeFromRecents="true"
+            android:finishOnCloseSystemDialogs="true"
+            android:icon="@drawable/pangle_pic"
+            android:label="@string/tt_pangle_na"
+            android:roundIcon="@drawable/pangle_pic"
+            android:screenOrientation="portrait"
+            android:taskAffinity="com.autumn.task"
+            android:theme="@android:style/Theme.Holo.Light.NoActionBar"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+
+        <activity
+            android:name="sg.bigo.ads.core.mraid.MraidVideoActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:excludeFromRecents="true"
+            android:finishOnCloseSystemDialogs="true"
+            android:icon="@drawable/pangle_pic"
+            android:label="@string/tt_pangle_na"
+            android:roundIcon="@drawable/pangle_pic"
+            android:screenOrientation="portrait"
+            android:taskAffinity="com.autumn.task"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
+
+        <activity
+            android:name="com.mbridge.msdk.reward.player.MBRewardVideoActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:excludeFromRecents="true"
+            android:finishOnCloseSystemDialogs="true"
+            android:icon="@drawable/pangle_pic"
+            android:label="@string/tt_pangle_na"
+            android:roundIcon="@drawable/pangle_pic"
+            android:taskAffinity="com.autumn.task"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+        <activity
+            android:name="com.bytedance.sdk.openadsdk.activity.TTRewardVideoActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:excludeFromRecents="true"
+            android:finishOnCloseSystemDialogs="true"
+            android:icon="@drawable/pangle_pic"
+            android:label="@string/tt_pangle_na"
+            android:launchMode="standard"
+            android:roundIcon="@drawable/pangle_pic"
+            android:taskAffinity="com.autumn.task"
+            android:theme="@style/tt_full_screen_new" />
+
+        <activity
+            android:name="com.bytedance.sdk.openadsdk.activity.TTWebsiteActivity"
+            android:excludeFromRecents="true"
+            android:finishOnCloseSystemDialogs="true"
+            android:icon="@drawable/pangle_pic"
+            android:label="@string/tt_pangle_na"
+            android:launchMode="standard"
+            android:roundIcon="@drawable/pangle_pic"
+            android:taskAffinity="com.autumn.task"
+            android:theme="@style/tt_privacy_landing_page" />
+
+        <activity
+            android:name="com.applovin.adview.AppLovinFullscreenActivity"
+            android:configChanges="fontScale|keyboard|keyboardHidden|locale|orientation|screenLayout|screenSize|smallestScreenSize|uiMode"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:finishOnCloseSystemDialogs="true"
+            android:hardwareAccelerated="true"
+            android:icon="@drawable/pangle_pic"
+            android:label="@string/tt_pangle_na"
+            android:launchMode="singleTop"
+            android:roundIcon="@drawable/pangle_pic"
+            android:screenOrientation="behind"
+            android:taskAffinity="com.autumn.task" />
+
+        <activity
+            android:name="com.applovin.sdk.AppLovinWebViewActivity"
+            android:configChanges="fontScale|keyboard|keyboardHidden|locale|orientation|screenLayout|screenSize|smallestScreenSize|uiMode"
+            android:excludeFromRecents="true"
+            android:finishOnCloseSystemDialogs="true"
+            android:icon="@drawable/pangle_pic"
+            android:label="@string/tt_pangle_na"
+            android:roundIcon="@drawable/pangle_pic"
+            android:taskAffinity="com.autumn.task" />
+
+        <!-- Hybrid Ad Activities -->
+        <activity
+            android:name="com.applovin.mediation.hybridAds.MaxHybridMRecAdActivity"
+            android:configChanges="fontScale|keyboard|keyboardHidden|locale|orientation|screenLayout|screenSize|smallestScreenSize|uiMode"
+            android:excludeFromRecents="true"
+            android:finishOnCloseSystemDialogs="true"
+            android:icon="@drawable/pangle_pic"
+            android:label="@string/tt_pangle_na"
+            android:roundIcon="@drawable/pangle_pic"
+            android:taskAffinity="com.autumn.task"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
+
+        <activity
+            android:name="com.applovin.mediation.hybridAds.MaxHybridNativeAdActivity"
+            android:configChanges="fontScale|keyboard|keyboardHidden|locale|orientation|screenLayout|screenSize|smallestScreenSize|uiMode"
+            android:excludeFromRecents="true"
+            android:finishOnCloseSystemDialogs="true"
+            android:icon="@drawable/pangle_pic"
+            android:label="@string/tt_pangle_na"
+            android:roundIcon="@drawable/pangle_pic"
+            android:taskAffinity="com.autumn.task"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
+
+        <activity
+            android:name="com.inmobi.ads.rendering.InMobiAdActivity"
+            android:configChanges="keyboardHidden|orientation|keyboard|smallestScreenSize|screenSize|screenLayout|locale|fontScale|uiMode"
+            android:excludeFromRecents="true"
+            android:finishOnCloseSystemDialogs="true"
+            android:hardwareAccelerated="true"
+            android:icon="@drawable/pangle_pic"
+            android:label="@string/tt_pangle_na"
+            android:roundIcon="@drawable/pangle_pic"
+            android:taskAffinity="com.autumn.task"
+            android:theme="@android:style/Theme.NoTitleBar"
+            tools:ignore="UnusedAttribute" />
+
+        <activity
+            android:name="com.bytedance.sdk.openadsdk.activity.TTRewardExpressVideoActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:excludeFromRecents="true"
+            android:finishOnCloseSystemDialogs="true"
+            android:icon="@drawable/pangle_pic"
+            android:label="@string/tt_pangle_na"
+            android:launchMode="standard"
+            android:roundIcon="@drawable/pangle_pic"
+            android:taskAffinity="com.autumn.task"
+            android:theme="@style/tt_full_screen_new" />
+
+        <activity
+            android:name="com.bytedance.sdk.openadsdk.activity.TTFullScreenVideoActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:excludeFromRecents="true"
+            android:finishOnCloseSystemDialogs="true"
+            android:icon="@drawable/pangle_pic"
+            android:label="@string/tt_pangle_na"
+            android:launchMode="standard"
+            android:roundIcon="@drawable/pangle_pic"
+            android:taskAffinity="com.autumn.task"
+            android:theme="@style/tt_full_screen_new" />
+
+        <activity
+            android:name="com.bytedance.sdk.openadsdk.activity.TTFullScreenExpressVideoActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:excludeFromRecents="true"
+            android:finishOnCloseSystemDialogs="true"
+            android:icon="@drawable/pangle_pic"
+            android:label="@string/tt_pangle_na"
+            android:launchMode="standard"
+            android:roundIcon="@drawable/pangle_pic"
+            android:taskAffinity="com.autumn.task"
+            android:theme="@style/tt_full_screen_new" />
+
+        <activity
+            android:name="com.bytedance.sdk.openadsdk.activity.TTInterstitialActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:excludeFromRecents="true"
+            android:finishOnCloseSystemDialogs="true"
+            android:icon="@drawable/pangle_pic"
+            android:label="@string/tt_pangle_na"
+            android:launchMode="standard"
+            android:roundIcon="@drawable/pangle_pic"
+            android:taskAffinity="com.autumn.task"
+            android:theme="@style/tt_full_screen_interaction" />
+
+        <activity
+            android:name="com.bytedance.sdk.openadsdk.activity.TTInterstitialExpressActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:excludeFromRecents="true"
+            android:finishOnCloseSystemDialogs="true"
+            android:icon="@drawable/pangle_pic"
+            android:label="@string/tt_pangle_na"
+            android:launchMode="standard"
+            android:roundIcon="@drawable/pangle_pic"
+            android:taskAffinity="com.autumn.task"
+            android:theme="@style/tt_full_screen_interaction" />
+
+        <activity
+            android:name="com.bytedance.sdk.openadsdk.activity.TTLandingPageActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:excludeFromRecents="true"
+            android:finishOnCloseSystemDialogs="true"
+            android:icon="@drawable/pangle_pic"
+            android:label="@string/tt_pangle_na"
+            android:launchMode="standard"
+            android:roundIcon="@drawable/pangle_pic"
+            android:taskAffinity="com.autumn.task"
+            android:theme="@style/tt_landing_page" />
+
+        <activity
+            android:name="com.bytedance.sdk.openadsdk.activity.TTPlayableLandingPageActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:excludeFromRecents="true"
+            android:finishOnCloseSystemDialogs="true"
+            android:icon="@drawable/pangle_pic"
+            android:label="@string/tt_pangle_na"
+            android:launchMode="standard"
+            android:roundIcon="@drawable/pangle_pic"
+            android:taskAffinity="com.autumn.task"
+            android:theme="@style/tt_landing_page" />
+
+        <activity
+            android:name="com.bytedance.sdk.openadsdk.activity.TTVideoLandingPageLink2Activity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:excludeFromRecents="true"
+            android:finishOnCloseSystemDialogs="true"
+            android:icon="@drawable/pangle_pic"
+            android:label="@string/tt_pangle_na"
+            android:launchMode="standard"
+            android:roundIcon="@drawable/pangle_pic"
+            android:taskAffinity="com.autumn.task"
+            android:theme="@style/tt_landing_page" />
+
+
+        <activity
+            android:name="com.tp.adx.sdk.ui.InnerWebViewActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:excludeFromRecents="true"
+            android:finishOnCloseSystemDialogs="true"
+            android:icon="@drawable/pangle_pic"
+            android:label="@string/tt_pangle_na"
+            android:roundIcon="@drawable/pangle_pic"
+            android:taskAffinity="com.autumn.task"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+        <activity
+            android:name="com.tp.adx.sdk.ui.InnerActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:excludeFromRecents="true"
+            android:finishOnCloseSystemDialogs="true"
+            android:icon="@drawable/pangle_pic"
+            android:label="@string/tt_pangle_na"
+            android:roundIcon="@drawable/pangle_pic"
+            android:taskAffinity="com.autumn.task"
+            android:theme="@android:style/Theme.NoTitleBar" />
+
+        <activity
+            android:name="com.vungle.ads.internal.ui.VungleActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"
+            android:excludeFromRecents="true"
+            android:finishOnCloseSystemDialogs="true"
+            android:hardwareAccelerated="true"
+            android:icon="@drawable/pangle_pic"
+            android:label="@string/tt_pangle_na"
+            android:launchMode="singleTop"
+            android:roundIcon="@drawable/pangle_pic"
+            android:taskAffinity="com.autumn.task" />
 
     </application>
 </manifest>

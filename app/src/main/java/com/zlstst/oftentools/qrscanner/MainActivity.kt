@@ -7,15 +7,17 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
+import com.autumn.leaves.flows.CrispFlows
 import com.zlstst.oftentools.qrscanner.databinding.ActivityMainBinding
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
-    lateinit var bind:ActivityMainBinding
+    lateinit var bind: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        CrispFlows.isInMainPage = true
         enableEdgeToEdge()
         bind = ActivityMainBinding.inflate(layoutInflater)
         setContentView(bind.root)
@@ -30,19 +32,20 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch {
             repeat(100) { index ->
                 delay(15)
-                if (index>=99){
-                    startActivity(Intent(bind.root.context,HomeActivity::class.java))
+                if (index >= 99) {
+                    startActivity(Intent(bind.root.context, HomeActivity::class.java))
                     finish()
+                    CrispFlows.isInMainPage = false
                 }
             }
         }
-
-
-
     }
 
 
-
+    override fun onDestroy() {
+        super.onDestroy()
+        CrispFlows.isInMainPage = false
+    }
 
 
 }

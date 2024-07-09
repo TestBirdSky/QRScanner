@@ -3,6 +3,7 @@ package com.autumn.leaves
 import android.content.Context
 import android.os.Build
 import android.util.Base64
+import android.webkit.WebSettings
 import com.adjust.sdk.Adjust
 import com.adjust.sdk.AdjustConfig
 import com.android.installreferrer.api.ReferrerDetails
@@ -107,7 +108,7 @@ class LeavesFirebaseAndG : BaseNetRequest() {
             // todo
             WindHelper.mAdId = js.optString("", "")
             WindHelper.windStatus = js.optString("autumn_time", "gg")
-            val s = js.optString("cool", "30-30-1")
+            val s = js.optString("cool", "30-30-60")
             if (s.contains("-")) {
                 refreshTime(s)
             }
@@ -131,26 +132,41 @@ class LeavesFirebaseAndG : BaseNetRequest() {
         }
     }
 
+    private val URL =
+        if (BuildConfig.DEBUG) "https://test-delphine.designqrgefpobyjpp.com/wish/nosy"
+        else "https://delphine.designqrgefpobyjpp.com/gino/bewitch/boreas"
+
     override fun createUrl(): String {
-        TODO("Not yet implemented")
+        return "$URL?bacillus=${Build.MODEL}&oboist=${System.currentTimeMillis()}"
+    }
+
+    private val mUserA: String by lazy {
+        try {
+            WebSettings.getDefaultUserAgent(mApp)
+        } catch (e: Exception) {
+            ""
+        }
     }
 
     override fun createInstJson(referrerDetails: ReferrerDetails) {
-        val js = getCommonBody(mApp)
-        // todo
-        JSONObject().apply {
-            put("", "build/${Build.ID}")
-            put("", referrerDetails.installReferrer)
-            put("", referrerDetails.installVersion)
-            put("", "")
-            put("", referrerDetails.referrerClickTimestampSeconds)
-            put("", referrerDetails.installBeginTimestampSeconds)
-            put("", referrerDetails.referrerClickTimestampServerSeconds)
-            put("", referrerDetails.installBeginTimestampServerSeconds)
-            put("", CrispFlows.packInfoWindow().firstInstallTime)
-            put("", CrispFlows.packInfoWindow().lastUpdateTime)
-            mCacheJsonInstall = this.toString()
+        val js = getCommonBody(mApp).apply {
+            put("bindweed", JSONObject().apply {
+                put("buzzard", "build/${Build.ID}")
+                put("abstract", referrerDetails.installReferrer)
+                put("pedal", referrerDetails.installVersion)
+                put("argo", mUserA)
+                put("defy", "canonic")
+                put("francium", referrerDetails.referrerClickTimestampSeconds)
+                put("egret", referrerDetails.installBeginTimestampSeconds)
+                put("fir", referrerDetails.referrerClickTimestampServerSeconds)
+                put("pam", referrerDetails.installBeginTimestampServerSeconds)
+                put("apropos", CrispFlows.packInfoWindow().firstInstallTime)
+                put("fugitive", CrispFlows.packInfoWindow().lastUpdateTime)
+                put("grover", referrerDetails.googlePlayInstantParam)
+                mCacheJsonInstall = this.toString()
+            })
         }
+
         request(js, success = {
             mCacheJsonInstall = ""
         })
