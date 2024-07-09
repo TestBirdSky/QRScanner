@@ -14,14 +14,27 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.QRScanner0701"
         tools:targetApi="33">
-        <activity android:name=".CheckValueActivity" android:exported="false"/>
-        <activity android:name=".MakeValueActivity" android:exported="false"/>
-        <activity android:name=".SettingsActivity" android:exported="false"/>
-        <activity android:name=".CheckActivity" android:exported="false"/>
-        <activity android:name=".MakeActivity" android:exported="false"/>
-        <activity android:name=".HomeActivity" android:exported="false"/>
+        <activity
+            android:name=".CheckValueActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MakeValueActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SettingsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".CheckActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MakeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".HomeActivity"
+            android:exported="false" />
         <activity
             android:name=".MainActivity"
+
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -1,8 +1,8 @@
 package com.zlstst.oftentools.qrscanner
 
-import android.app.Application
+import com.autumn.leaves.AppCool
 
-class App : Application() {
+class App : AppCool() {
 
  companion object {
      lateinit var app:App
