@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:background="@color/color4"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="wrap_content"
+            android:src="@mipmap/ic_tag_100"
+            android:layout_gravity="end"
+            android:layout_height="wrap_content"></androidx.appcompat.widget.AppCompatImageView>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:text="@string/app_name"
+            android:layout_marginTop="36dp"
+            android:textSize="24sp"
+            android:layout_marginStart="20dp"
+            android:textStyle="bold"
+            android:textColor="@color/color2"
+            android:layout_height="wrap_content"></androidx.appcompat.widget.AppCompatTextView>
+
+        <LinearLayout
+            android:layout_marginTop="84dp"
+            android:layout_width="wrap_content"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="8dp"
+            android:layout_marginStart="20dp"
+            android:id="@+id/settingsBtn"
+            android:background="@drawable/btn_setting_bg"
+            android:orientation="horizontal"
+            android:layout_height="wrap_content">
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="wrap_content"
+                android:src="@mipmap/ic_btn_settings"
+                android:layout_height="wrap_content"></androidx.appcompat.widget.AppCompatImageView>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:text="@string/settings"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_marginStart="4dp"
+                android:textColor="@color/color2"
+                android:layout_height="wrap_content"></androidx.appcompat.widget.AppCompatTextView>
+        </LinearLayout>
+
+    </FrameLayout>
+
+
+    <LinearLayout
+        android:background="@drawable/bg_home_main"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/checkBtn"
+            android:layout_width="match_parent"
+android:layout_marginTop="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/bg_home_scanqr"
+            android:layout_height="wrap_content">
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="wrap_content"
+                android:src="@mipmap/ic_home_scanqr_tag"
+                android:layout_marginStart="30dp"
+        android:layout_marginTop="24dp"
+                android:layout_marginBottom="24dp"
+                android:layout_height="wrap_content"></androidx.appcompat.widget.AppCompatImageView>
+            <Space
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="0dp"></Space>
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:text="@string/scan_qr"
+             android:layout_gravity="center_vertical"
+                android:layout_marginEnd="37dp"
+                android:textSize="32sp"
+
+                android:textStyle="bold"
+                android:textColor="@color/color2"
+                android:layout_height="wrap_content"></androidx.appcompat.widget.AppCompatTextView>
+
+        </LinearLayout>
+        <FrameLayout
+            android:id="@+id/makeBtn"
+            android:layout_width="match_parent"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/bg_home_creatqr"
+            android:layout_height="62dp">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:text="@string/create_qr"
+                android:layout_gravity="center"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="@color/color2"
+                android:layout_height="wrap_content"></androidx.appcompat.widget.AppCompatTextView>
+
+        </FrameLayout>
+    </LinearLayout>
+
+
+    </LinearLayout>

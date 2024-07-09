@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:background="@color/color4"
+    android:layout_height="match_parent"
+    tools:context=".ValueActivity">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="wrap_content"
+            android:src="@mipmap/ic_tag_100"
+            android:layout_gravity="end"
+            android:layout_height="wrap_content"></androidx.appcompat.widget.AppCompatImageView>
+
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:layout_width="wrap_content"
+            android:src="@mipmap/ic_back"
+            android:id="@+id/backBtn"
+            android:layout_marginTop="34dp"
+            android:layout_marginStart="20dp"
+            android:background="@android:color/transparent"
+            android:layout_height="wrap_content"></androidx.appcompat.widget.AppCompatImageButton>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:text="@string/qr_code"
+            android:layout_marginTop="111dp"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:layout_marginStart="20dp"
+            android:textColor="@color/color2"
+            android:layout_height="wrap_content"></androidx.appcompat.widget.AppCompatTextView>
+
+    </FrameLayout>
+
+
+    <LinearLayout
+        android:background="@drawable/bg_home_main"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="match_parent">
+
+        <FrameLayout
+            android:layout_width="243dp"
+            android:layout_marginTop="26dp"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/bg_value_qr_bg3"
+            android:layout_height="243dp">
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="160dp"
+                android:id="@+id/qrIv"
+                tools:src="@mipmap/ic_launcher_app_logo"
+                android:layout_gravity="center"
+                android:layout_height="160dp"></androidx.appcompat.widget.AppCompatImageView>
+        </FrameLayout>
+
+        
+        <LinearLayout
+            android:gravity="center_horizontal"
+            android:orientation="horizontal"
+            android:layout_marginTop="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageButton
+                android:id="@+id/save"
+                android:layout_width="wrap_content"
+                android:src="@mipmap/ic_value_save"
+                android:layout_marginHorizontal="24dp"
+                android:background="@android:color/transparent"
+                android:layout_height="wrap_content"></ImageButton>
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+    </LinearLayout>

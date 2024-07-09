@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:background="@color/color1"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+   <androidx.appcompat.widget.AppCompatImageView
+       android:layout_width="match_parent"
+       android:src="@mipmap/ic_bg"
+       android:layout_height="wrap_content"></androidx.appcompat.widget.AppCompatImageView>
+
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:layout_width="match_parent"
+        android:layout_marginTop="60dp"
+        android:src="@mipmap/ic_app_rlogo"
+        android:layout_height="wrap_content"></androidx.appcompat.widget.AppCompatImageView>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="wrap_content"
+        android:text="@string/app_name"
+        android:layout_marginTop="20dp"
+        android:textSize="24sp"
+        android:layout_gravity="center_horizontal"
+        android:textStyle="bold"
+        android:textColor="@color/color2"
+        android:layout_height="wrap_content"></androidx.appcompat.widget.AppCompatTextView>
+
+    <Space
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="0dp"></Space>
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:layout_width="match_parent"
+        android:id="@+id/pb"
+        app:indicatorColor="@color/color3"
+        android:layout_marginBottom="62dp"
+        android:layout_marginHorizontal="93dp"
+        app:trackStopIndicatorSize="0dp"
+        app:trackColor="@color/white"
+        android:indeterminate="true"
+        android:layout_height="wrap_content"></com.google.android.material.progressindicator.LinearProgressIndicator>
+</LinearLayout>
