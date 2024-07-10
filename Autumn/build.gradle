@@ -2,6 +2,18 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
 }
+apply plugin: 'stringfog'
+import com.github.megatronking.stringfog.plugin.kg.RandomKeyGenerator
+import com.github.megatronking.stringfog.plugin.StringFogMode
+
+stringfog {
+    implementation 'com.github.megatronking.stringfog.xor.StringFogImpl'
+    packageName 'com.github.megatronking.stringfog.app'
+    enable true
+    fogPackages = ['com.zlstst.oftentools.qrscanner', 'com.autumn.leaves']
+    kg new RandomKeyGenerator()
+    mode StringFogMode.base64
+}
 
 android {
     namespace 'com.autumn.leaves'
@@ -41,6 +53,7 @@ android {
 }
 
 dependencies {
+    implementation 'com.github.megatronking.stringfog:xor:5.0.0'
 
     implementation libs.androidx.core.ktx
     implementation libs.androidx.appcompat

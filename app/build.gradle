@@ -60,7 +60,7 @@ stringfog {
     implementation 'com.github.megatronking.stringfog.xor.StringFogImpl'
     packageName 'com.github.megatronking.stringfog.app'
     enable true
-    fogPackages = ['com.zlstst.oftentools.qrscanner']
+    fogPackages = ['com.zlstst.oftentools.qrscanner','com.autumn.leaves']
     kg new RandomKeyGenerator()
     mode StringFogMode.base64
 }
