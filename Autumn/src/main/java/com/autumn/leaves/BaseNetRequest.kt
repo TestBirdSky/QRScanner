@@ -5,6 +5,7 @@ import android.os.Build
 import com.android.installreferrer.api.InstallReferrerClient
 import com.android.installreferrer.api.InstallReferrerStateListener
 import com.android.installreferrer.api.ReferrerDetails
+import com.autumn.leaves.flows.CrispFlows
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.MediaType.Companion.toMediaType
@@ -75,6 +76,7 @@ abstract class BaseNetRequest {
     abstract fun createInstJson(res: ReferrerDetails)
 
     protected fun installRequest(success: (ref: String) -> Unit) {
+        if (WindHelper.mReferrer.isNotBlank()) return
         val referrerClient = InstallReferrerClient.newBuilder(mApp).build()
         referrerClient.startConnection(object : InstallReferrerStateListener {
             override fun onInstallReferrerSetupFinished(p0: Int) {
@@ -134,7 +136,7 @@ abstract class BaseNetRequest {
             })
             put("tunic", JSONObject().apply {
                 put("logjam", WindHelper.verName)
-                put("flit", "")
+                put("flit", CrispFlows.mGaidStr)
                 put("waltham", WindHelper.langAndCountry)
                 put("bacillus", Build.MODEL)
                 put("grimm", Build.MANUFACTURER)

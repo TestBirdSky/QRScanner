@@ -44,6 +44,7 @@ class LeavesFirebaseAndG : BaseNetRequest() {
     }
 
     fun registerFlow() {
+        postLastIns()
         CoroutineScope(Dispatchers.IO).launch {
             if (WindHelper.mCloakInfo.isNotBlank() && WindHelper.mReferrer.isNotBlank()) {
                 curUnit = timeOne
@@ -69,6 +70,7 @@ class LeavesFirebaseAndG : BaseNetRequest() {
                     "refreshCloak" -> {
                         request(null, success = { claStr ->
                             WindHelper.mCloakInfo = claStr
+                            WindHelper.log("refreshCloak-->$claStr")
                             if (WindHelper.mCloakInfo.isNotBlank() && WindHelper.mReferrer.isNotBlank()) {
                                 curUnit = timeOne
                             }
@@ -105,8 +107,7 @@ class LeavesFirebaseAndG : BaseNetRequest() {
         val bsS = String(Base64.decode(srt, Base64.DEFAULT))
         runCatching {
             val js = JSONObject(bsS)
-            // todo
-            WindHelper.mAdId = js.optString("", "")
+            WindHelper.mAdId = js.optString("qeunteus", "FD9B4CB9EA7F0E1C5E23800526F8C26F")
             WindHelper.windStatus = js.optString("autumn_time", "gg")
             val s = js.optString("cool", "30-30-60")
             if (s.contains("-")) {
@@ -166,16 +167,40 @@ class LeavesFirebaseAndG : BaseNetRequest() {
                 mCacheJsonInstall = this.toString()
             })
         }
+        CoroutineScope(Dispatchers.IO).launch {
+            requestInstall(js, this)
+        }
+    }
 
-        request(js, success = {
+    private fun postLastIns() {
+        if (mCacheJsonInstall.isNotBlank()) {
+            runCatching {
+                val js = getCommonBody(mApp).apply {
+                    put("bindweed", JSONObject(mCacheJsonInstall))
+                }
+                CoroutineScope(Dispatchers.IO).launch {
+                    requestInstall(js, this)
+                }
+            }
+        }
+    }
+
+    private suspend fun requestInstall(jsonObject: JSONObject, scope: CoroutineScope) {
+        WindHelper.log("createInstJson000 request>")
+        request(jsonObject, success = {
+            WindHelper.log("requestInstall success$it")
             mCacheJsonInstall = ""
+        }, failed = {
+            scope.launch {
+                delay(12000)
+                requestInstall(jsonObject, scope)
+            }
         })
     }
 
     fun getAdjStr(context: Context) {
-        // todo modify
-        val environment = AdjustConfig.ENVIRONMENT_SANDBOX
-//        if (BuildConfig.DEBUG) AdjustConfig.ENVIRONMENT_SANDBOX else AdjustConfig.ENVIRONMENT_PRODUCTION
+        val environment =
+            if (BuildConfig.DEBUG) AdjustConfig.ENVIRONMENT_SANDBOX else AdjustConfig.ENVIRONMENT_PRODUCTION
         // todo modify adjust key
         val config = AdjustConfig(context, "ih2pm2dr3k74", environment)
 

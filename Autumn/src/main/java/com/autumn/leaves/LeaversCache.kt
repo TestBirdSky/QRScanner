@@ -6,9 +6,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import com.adjust.sdk.Adjust
 import com.autumn.leaves.flows.CrispFlows
+import com.autumn.leaves.ss.ListenerShowEvent
 import com.facebook.appevents.AppEventsLogger
 import com.tradplus.ads.base.bean.TPAdError
 import com.tradplus.ads.base.bean.TPAdInfo
+import com.tradplus.ads.open.LoadAdEveryLayerListener
 import com.tradplus.ads.open.TradPlusSdk
 import com.tradplus.ads.open.interstitial.InterstitialAdListener
 import com.tradplus.ads.open.interstitial.TPInterstitial
@@ -28,21 +30,7 @@ class LeaversCache(val context: Context) : InterstitialAdListener {
     private val mScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
     private var isInitSuccess = false
     private var isAllowAll = false
-
-    init {
-        mScope.launch {
-            CrispFlows.globalFlow.collect {
-                WindHelper.log("Leavers --->Event$it")
-                when (it) {
-                    "load_leavers" -> {
-                        isStopRequestCircle = true
-                        loadTrad()
-                    }
-
-                }
-            }
-        }
-    }
+    var mListenerShowEvent: ListenerShowEvent? = null
 
     fun finishActivity(): Int {
         if (leavers.isEmpty()) return 0
@@ -69,22 +57,23 @@ class LeaversCache(val context: Context) : InterstitialAdListener {
             when (name) {
                 "com.bytedance.sdk.openadsdk.activity.TTFullScreenOActivity" -> { //外弹
                     mScope.launch {
-                        CrispFlows.globalFlow.emit("star_up")
+                        WindHelper.eventPost("startup")
+                        mListenerShowEvent?.showStart()
                         if (isCanUse() != null) {
                             if (activity is AppCompatActivity) {
                                 val time = System.currentTimeMillis()
-                                while (System.currentTimeMillis() - time < 1000) {
+                                while (System.currentTimeMillis() - time < 500) {
                                     delay(50)
                                     if (activity.lifecycle.currentState == Lifecycle.State.RESUMED) {
                                         break
                                     }
                                 }
                             } else {
-                                delay(500)
+                                delay(299)
                             }
                             userShow(activity)
                         } else {
-                            CrispFlows.globalFlow.emit("adNotReady")
+                            mListenerShowEvent?.showFailed()
                             WindHelper.eventPost("showfailer", mapOf("string" to "ad not ready"))
                             activity.finishAndRemoveTask()
                         }
@@ -108,7 +97,7 @@ class LeaversCache(val context: Context) : InterstitialAdListener {
                 }
             } else {
                 mScope.launch {
-                    delay(2000)
+                    delay(1500)
                     if (num <= 0) {
                         ArrayList(leavers).forEach {
                             it.finish()
@@ -132,11 +121,10 @@ class LeaversCache(val context: Context) : InterstitialAdListener {
             isInitSuccess = true
             requestAdCircle()
         }
-        // todo add app id
-        TradPlusSdk.initSdk(context, "您在TradPlus平台创建的应用ID")
+        TradPlusSdk.initSdk(context, "BAF3FB6E969AD320576893222E193B78")
     }
 
-    private var isStopRequestCircle = false
+    var isStopRequestCircle = false
     private fun requestAdCircle() {
         mScope.launch {
             delay(5000)
@@ -155,7 +143,7 @@ class LeaversCache(val context: Context) : InterstitialAdListener {
     private var lastLoadingTime = 0L
     private var lastSaveTime = 0L
     private var mTpInters: TPInterstitial? = null
-    private fun loadTrad() {
+    fun loadTrad() {
         if (WindHelper.mAdId.isBlank()) return
         if (isInitSuccess.not()) return
         if (isLoading && System.currentTimeMillis() - lastLoadingTime < 60_000) {
@@ -171,6 +159,44 @@ class LeaversCache(val context: Context) : InterstitialAdListener {
         lastLoadingTime = System.currentTimeMillis()
         if (mTpInters == null) {
             mTpInters = TPInterstitial(context, WindHelper.mAdId)
+//            mTpInters?.let {
+//                it.setAllAdLoadListener(object : LoadAdEveryLayerListener {
+//                    override fun onAdAllLoaded(p0: Boolean) {
+//                        WindHelper.log("AD---onAdAllLoaded-->")
+//                    }
+//
+//                    override fun oneLayerLoadFailed(p0: TPAdError?, p1: TPAdInfo?) {
+//                        WindHelper.log("AD---oneLayerLoadFailed-->${p0?.errorCode}---${p0?.errorMsg}")
+//                    }
+//
+//                    override fun oneLayerLoaded(p0: TPAdInfo?) {
+//                        WindHelper.log("AD---oneLayerLoaded")
+//
+//                    }
+//
+//                    override fun onAdStartLoad(p0: String?) {
+//                        WindHelper.log("AD---onAdStartLoad")
+//
+//                    }
+//
+//                    override fun oneLayerLoadStart(p0: TPAdInfo?) {
+//                        WindHelper.log("AD---oneLayerLoadStart")
+//                    }
+//
+//                    override fun onBiddingStart(p0: TPAdInfo?) {
+//                        WindHelper.log("AD---onBiddingStart")
+//
+//                    }
+//
+//                    override fun onBiddingEnd(p0: TPAdInfo?, p1: TPAdError?) {
+//
+//                    }
+//
+//                    override fun onAdIsLoading(p0: String?) {
+//
+//                    }
+//                })
+//            }
         }
         mTpInters?.let {
             WindHelper.eventPost("reqprogress")
@@ -193,6 +219,7 @@ class LeaversCache(val context: Context) : InterstitialAdListener {
                 activity.finishAndRemoveTask()
             }
             tp.showAd(activity, "")
+//            mTpInters = null
         }
     }
 
@@ -211,9 +238,7 @@ class LeaversCache(val context: Context) : InterstitialAdListener {
         lastSaveTime = System.currentTimeMillis()
         if (isBroadLoadSuccess) {
             isBroadLoadSuccess = false
-            mScope.launch {
-                CrispFlows.globalFlow.emit("adLoadSuccess")
-            }
+            mListenerShowEvent?.loadedSuccess()
         }
     }
 

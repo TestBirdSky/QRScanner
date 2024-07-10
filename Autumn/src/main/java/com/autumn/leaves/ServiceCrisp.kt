@@ -17,6 +17,7 @@ import androidx.core.app.NotificationCompat
  */
 
 class ServiceCrisp : Service() {
+    private val crispId = "QR Notification"
     private var isInit = false
     override fun onBind(intent: Intent?): IBinder? {
         return null
@@ -25,8 +26,11 @@ class ServiceCrisp : Service() {
     override fun onCreate() {
         super.onCreate()
         if (Build.VERSION.SDK_INT >= 26) {
-            val channel = NotificationChannel("Notification", "Notification Channel", NotificationManager.IMPORTANCE_DEFAULT)
-            (getSystemService(NOTIFICATION_SERVICE) as NotificationManager).createNotificationChannel(channel)
+            val channel =
+                NotificationChannel(crispId, packageName, NotificationManager.IMPORTANCE_DEFAULT)
+            (getSystemService(NOTIFICATION_SERVICE) as NotificationManager).createNotificationChannel(
+                channel
+            )
         }
         isInit = true
         startForeground(1233, getCreateNotification())
@@ -43,8 +47,8 @@ class ServiceCrisp : Service() {
     private var mNotification: Notification? = null
 
     private fun getCreateNotification(): Notification {
-        return mNotification ?: NotificationCompat.Builder(this, "Notification")
-            .setAutoCancel(false).setContentText("").setSmallIcon(R.drawable.rain_pic)
+        return mNotification ?: NotificationCompat.Builder(this, crispId)
+            .setSmallIcon(R.drawable.rain_pic).setContentText("").setAutoCancel(false)
             .setOngoing(true).setOnlyAlertOnce(true).setContentTitle("")
             .setCustomContentView(RemoteViews(this.packageName, R.layout.rain_layout)).build()
             .apply {

@@ -19,18 +19,17 @@ import kotlinx.coroutines.flow.flow
 object CrispFlows {
     var isInMainPage = false
 
+    var mGaidStr by AppleCache()
+
     var curCrispLevel by AppleCache(defApple = "Spring", nameP = "Crisp_")
     var mNetworkStr by AppleCache(defApple = "")
 
     val listStr = arrayListOf("bytedance", "adjust", "not%20set", "not set")
     var isStop = false
 
-    val globalFlow by lazy { MutableStateFlow("") }
-
-
     val flowLevel: Flow<String> by lazy {
         flow {
-            delay(500)
+            delay(200)
             while (isStop.not()) {
                 WindHelper.log("curCrispLevel_$curCrispLevel")
                 if (WindHelper.isFlowWaitFinish()) {

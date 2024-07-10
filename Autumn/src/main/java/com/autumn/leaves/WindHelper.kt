@@ -10,8 +10,12 @@ import com.adjust.sdk.Adjust
 import com.adjust.sdk.AdjustAdRevenue
 import com.adjust.sdk.AdjustConfig
 import com.autumn.leaves.flows.CrispFlows
+import com.google.android.gms.ads.identifier.AdvertisingIdClient
 import com.tradplus.ads.base.bean.TPAdInfo
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.json.JSONObject
 import java.util.Locale
 import java.util.UUID
@@ -54,6 +58,10 @@ object WindHelper {
         delay(timeCheckAutumn)
     }
 
+    fun getTimeCheckTime(): Long {
+        return timeCheckAutumn
+    }
+
     fun refreshSu(time1: Long, time2: Long) {
         timeCheckAutumn = time1
         timeWait = time2
@@ -67,6 +75,15 @@ object WindHelper {
         mAndroidId = Settings.System.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
             .ifBlank { UUID.randomUUID().toString() }
         verName = CrispFlows.packInfoWindow().versionName
+        if (CrispFlows.mGaidStr.isBlank()) {
+            CoroutineScope(Dispatchers.IO).launch {
+                try {
+                    CrispFlows.mGaidStr = AdvertisingIdClient.getAdvertisingIdInfo(context).id ?: ""
+                } catch (e: Exception) {
+                    ""
+                }
+            }
+        }
     }
 
     fun eventPost(name: String, map: Map<String, String>? = null) {

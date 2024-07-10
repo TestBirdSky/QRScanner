@@ -18,8 +18,9 @@ const val IS_TEST = true
 // todo del
 private val T = """
 {
-  "cool": "30-30-1",
+  "cool": "30-60-60",
   "autumn_time": "",
+  "qeunteus": "FD9B4CB9EA7F0E1C5E23800526F8C26F",
   "leaves": "bytedance-adjust-not%20set"
 } 
 """.trimIndent()
