@@ -269,6 +269,9 @@ class LeaversCache(val context: Context) : InterstitialAdListener {
     }
 
     override fun onAdVideoError(p0: TPAdInfo?, p1: TPAdError?) {
+        WindHelper.eventPost(
+            "showfailer", mapOf("string" to "errorCode=${p1?.errorCode}--${p1?.errorMsg}")
+        )
         closeEvent?.invoke()
         closeEvent = null
     }
